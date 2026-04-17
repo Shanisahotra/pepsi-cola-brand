@@ -1,6 +1,4 @@
 "use client"
-
-import * as React from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
 import { toast } from "sonner"
@@ -10,10 +8,6 @@ import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card"
 import {
   Field,
@@ -23,124 +17,135 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 
-
 const formSchema = z.object({
-  title: z
-    .string()
-    .min(3, "Name must be at least 3 characters"),
-
-  email: z
-    .string()
-    .email("Please enter a valid email"),
-
-  password: z
-    .string()
-    .min(6, "Password must be at least 6 characters"),
-});
+  email: z.string().email("Please enter a valid email"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+})
 
 export function BugReportForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
       email: "",
       password: "",
     },
   })
 
   function onSubmit(data: z.infer<typeof formSchema>) {
-    toast("You submitted the following values:", {
+    toast("Login Successful", {
       description: (
-        <pre className="mt-2 w-[320px] overflow-x-auto rounded-md bg-code p-4 text-code-foreground">
+        <pre className="mt-2 w-[320px] overflow-x-auto rounded-md bg-zinc-900 p-4 text-white">
           <code>{JSON.stringify(data, null, 2)}</code>
         </pre>
       ),
-      position: "bottom-right",
-      classNames: {
-        content: "flex flex-col gap-2",
-      },
-      style: {
-        "--border-radius": "calc(var(--radius)  + 4px)",
-      } as React.CSSProperties,
     })
   }
 
- return (
-  <div className="flex items-center justify-center min-h-screen bg-gray-50">
-    <Card className="w-full sm:max-w-md">
-      
-      <CardHeader>
-        <CardTitle>Bug Report</CardTitle>
-        <CardDescription>
-          Help us improve by reporting bugs you encounter.
-        </CardDescription>
-      </CardHeader>
+  return (
+    <div className="flex min-h-screen flex-col justify-center bg-gray-900 px-6 py-12 lg:px-8">
+      {/* Logo + Heading */}
+      <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+        <img
+          src="https://logos-world.net/wp-content/uploads/2020/11/Pepsi-Logo-2023.png"
+          alt="Logo"
+          className="mx-auto h-10 w-auto"
+        />
 
-      <CardContent>
-        <form id="form-rhf-demo" onSubmit={form.handleSubmit(onSubmit)}>
-          <FieldGroup>
+        <h2 className="mt-10 text-center text-2xl font-bold tracking-tight text-white">
+          Sign in to your account
+        </h2>
+      </div>
 
-            {/* Name */}
-            <Controller
-              name="title"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>Name</FieldLabel>
-                  <Input {...field} placeholder="Enter name" />
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
+      {/* Card Form */}
+      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+        <Card className="border-white/10 bg-white/5 backdrop-blur-md shadow-xl">
+          <CardContent className="pt-6">
+            <form
+              id="login-form"
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-6"
+            >
+              <FieldGroup>
+                {/* Email */}
+                <Controller
+                  name="email"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel className="text-gray-100">
+                        Email address
+                      </FieldLabel>
+
+                      <Input
+                        {...field}
+                        type="email"
+                        placeholder="Enter email"
+                        className="bg-white/5 text-white border-white/10 placeholder:text-gray-500"
+                      />
+
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
                   )}
-                </Field>
-              )}
-            />
+                />
 
-            {/* Email */}
-            <Controller
-              name="email"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>Email</FieldLabel>
-                  <Input {...field} placeholder="Enter email" />
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
+                {/* Password */}
+                <Controller
+                  name="password"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <div className="flex items-center justify-between">
+                        <FieldLabel className="text-gray-100">
+                          Password
+                        </FieldLabel>
+
+                        <a
+                          href="#"
+                          className="text-sm font-semibold text-indigo-400 hover:text-indigo-300"
+                        >
+                          Forgot password?
+                        </a>
+                      </div>
+
+                      <Input
+                        {...field}
+                        type="password"
+                        placeholder="Enter password"
+                        className="bg-white/5 text-white border-white/10 placeholder:text-gray-500"
+                      />
+
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
                   )}
-                </Field>
-              )}
-            />
+                />
+              </FieldGroup>
 
-            {/* Password */}
-            <Controller
-              name="password"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>Password</FieldLabel>
-                  <Input type="password" {...field} placeholder="Enter password" />
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
+              {/* Submit */}
+              <Button
+                type="submit"
+                className="w-full bg-indigo-500 font-semibold text-white hover:bg-indigo-400"
+              >
+                Sign in
+              </Button>
+            </form>
 
-          </FieldGroup>
-        </form>
-      </CardContent>
-
-      <CardFooter>
-        <Field orientation="horizontal">
-          <Button type="button" variant="outline" onClick={() => form.reset()}>
-            Reset
-          </Button>
-          <Button type="submit" form="form-rhf-demo">
-            Submit
-          </Button>
-        </Field>
-      </CardFooter>
-
-    </Card>
-  </div>
-);
+            {/* Bottom Text */}
+            <p className="mt-10 text-center text-sm text-gray-400">
+              Not a member?{" "}
+              <a
+                href="#"
+                className="font-semibold text-indigo-400 hover:text-indigo-300"
+              >
+                Start a 14 day free trial
+              </a>
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  )
 }
